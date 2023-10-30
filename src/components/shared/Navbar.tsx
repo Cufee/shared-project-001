@@ -1,39 +1,82 @@
+import useUserInfo from "../../core/hooks/useUserInfo";
+import { Link } from "react-router-dom";
+import { User } from "../../core/types/User";
+
 function Navbar() {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <a className="text-xl normal-case btn btn-ghost" href="/">
+        <Link to="/" className="text-xl normal-case btn btn-ghost">
           Cloud-File
-        </a>
+        </Link>
       </div>
       <div className="flex-none">
+        <ActionMenu />
+      </div>
+    </div>
+  );
+}
+
+function ActionMenu() {
+  const { user, loading } = useUserInfo();
+  if (loading) {
+    return (
+      <div className="menu menu-horizontal">
+        <li>
+          <span className="loading loading-spinner loading-sm"></span>
+        </li>
+      </div>
+    );
+  }
+  if (user !== null) {
+    return (
+      <>
         <div className="menu menu-horizontal">
           <li>
-            <a href="/upload">Upload</a>
+            <Link to="/upload">Upload</Link>
           </li>
         </div>
-        <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-            <div className="w-10 rounded-full">
-              <img src="https://picsum.photos/100" />
-            </div>
-          </label>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            <li>
-              <a href="/manage">Team</a>
-            </li>
-            <li>
-              <a href="/profile">Profile</a>
-            </li>
-            <li>
-              <a href="/logout">Logout</a>
-            </li>
-          </ul>
+        <UserProfile user={user} />
+      </>
+    );
+  }
+  return <LoginButton />;
+}
+
+function LoginButton() {
+  return (
+    <div className="menu menu-horizontal">
+      <li>
+        <Link to="/login" className="font-bold">
+          Login
+        </Link>
+      </li>
+    </div>
+  );
+}
+
+function UserProfile({ user }: { user: User }) {
+  return (
+    <div className="dropdown dropdown-end">
+      <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+        <div className="w-10 rounded-full">
+          <img src="https://picsum.photos/100" />
         </div>
-      </div>
+      </label>
+      <ul
+        tabIndex={0}
+        className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+      >
+        <li>
+          <Link to="/manage">Team</Link>
+        </li>
+        <li>
+          <Link to="/profile">Profile</Link>
+        </li>
+        <li>
+          <Link to="/logout">Logout</Link>
+        </li>
+      </ul>
     </div>
   );
 }
