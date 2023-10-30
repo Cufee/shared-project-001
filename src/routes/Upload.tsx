@@ -8,7 +8,7 @@ function Upload() {
         <UploadBox />
       </div>
       <div className="divider"></div>
-      <FilesList />
+      <FilesList files={[]} />
     </div>
   );
 }
