@@ -30,4 +30,16 @@ async function register(
   return { data, error: null };
 }
 
-export default register;
+async function login(username: string, password: string) {
+  const data = await apiRequest<RegisterResponse | ApiError>(
+    "POST",
+    "/auth/login",
+    { username, password },
+  );
+  if ("error" in data) {
+    return { data: null, error: data };
+  }
+  return { data, error: null };
+}
+
+export { login, register };

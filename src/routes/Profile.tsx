@@ -3,8 +3,10 @@ import useUserInfo from "../core/hooks/useUserInfo";
 import { UpdateUsername } from "../core/api/user";
 
 function Profile() {
-  const { user, save } = useUserInfo();
+  const { loading, user, save } = useUserInfo();
+  if (loading) return null;
   if (!user) return null;
+
   const updateUsername = (username: string) => {
     UpdateUsername(username).then((res) => save(res.data || undefined));
   };

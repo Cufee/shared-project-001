@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import useQuery from "../core/hooks/useQuery";
 import { Link, useNavigate } from "react-router-dom";
 import { RegisterFromInvitePayload, RegisterPayload } from "../core/types/Api";
-import registerUser from "../core/api/register";
+import { register as registerUser } from "../core/api/auth";
 import useUserInfo from "../core/hooks/useUserInfo";
 
 function Register() {
