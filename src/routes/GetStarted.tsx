@@ -1,9 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useUserInfo from "../core/hooks/useUserInfo";
 
 function GetStarted() {
+  const { token } = useUserInfo();
+  const navigate = useNavigate();
+  if (token) navigate("/upload");
+
   return (
-    <div className="flex flex-col items-center justify-center w-full gap-8">
-      <div className="flex flex-col items-center justify-center w-full gap-4 ">
+    <div className="flex flex-col gap-8 m-auto">
+      <div className="flex flex-col items-center justify-center w-full gap-4 px-8">
         <div className="flex flex-col items-center">
           <span className="text-4xl font-bold">Already have an invite?</span>
         </div>
@@ -16,10 +21,10 @@ function GetStarted() {
       </div>
       <div className="divider">OR</div>
       <div className="flex items-center justify-center gap-4">
-        <Link className="w-48 btn btn-lg btn-primary" to="/join">
+        <Link className="w-48 btn btn-primary" to="/join">
           Register
         </Link>
-        <Link className="w-48 btn btn-lg" to="/login">
+        <Link className="w-48 btn" to="/login">
           Login
         </Link>
       </div>

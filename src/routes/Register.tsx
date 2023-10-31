@@ -1,29 +1,40 @@
 import { useForm } from "react-hook-form";
 import useQuery from "../core/hooks/useQuery";
+import { Link, useNavigate } from "react-router-dom";
+import { RegisterFromInvitePayload, RegisterPayload } from "../core/types/Api";
+import registerUser from "../core/api/register";
+import useUserInfo from "../core/hooks/useUserInfo";
 
 function Register() {
   const query = useQuery();
   const invite = query.get("invite");
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data: any) => console.log(data);
-  console.log(watch("example"));
+  const { save, user } = useUserInfo();
+  const navigate = useNavigate();
+  if (user) navigate("/upload");
+
+  const { register, handleSubmit } = useForm();
+  const onSubmit = async (data: unknown) => {
+    const payload = data as RegisterPayload | RegisterFromInvitePayload;
+    const res = await registerUser(payload);
+    if (res.data && res.data.token && res.data.user) {
+      save(res.data.user, res.data.token);
+      navigate("/upload");
+    } else {
+      console.error(res.error);
+    }
+  };
 
   return (
     <form
-      className="flex flex-col items-center justify-center w-full gap-2"
+      className="flex flex-col w-full max-w-sm gap-2 m-auto"
       onSubmit={handleSubmit(onSubmit)}
     >
       <label htmlFor="email">
         <input
           type="text"
           placeholder="Username"
-          className="w-full max-w-md input input-bordered"
+          className="w-full input input-bordered"
           {...register("username", { required: true })}
         />
       </label>
@@ -31,7 +42,7 @@ function Register() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full max-w-md input input-bordered"
+          className="w-full input input-bordered"
           {...register("password", { required: true })}
         />
       </label>
@@ -39,7 +50,7 @@ function Register() {
         <input
           type="password"
           placeholder="Number of fingers you have"
-          className="w-full max-w-md input input-bordered"
+          className="w-full input input-bordered"
           {...register("passwordResetToken", { required: true })}
         />
       </label>
@@ -47,7 +58,7 @@ function Register() {
         <input
           type="text"
           placeholder="Name"
-          className="w-full max-w-md input input-bordered"
+          className="w-full input input-bordered"
           {...register("name", { required: true })}
         />
       </label>
@@ -55,7 +66,7 @@ function Register() {
         <input
           type="text"
           placeholder="Surname"
-          className="w-full max-w-md input input-bordered"
+          className="w-full input input-bordered"
           {...register("surname", { required: true })}
         />
       </label>
@@ -65,7 +76,7 @@ function Register() {
             disabled
             type="hidden"
             value={invite}
-            className="w-full max-w-md input input-bordered"
+            className="w-full input input-bordered"
             {...register("inviteToken", { required: true })}
           />
         </label>
@@ -74,14 +85,19 @@ function Register() {
           <input
             type="text"
             placeholder="Company Name"
-            className="w-full max-w-md input input-bordered"
+            className="w-full input input-bordered"
             {...register("companyName", { required: true })}
           />
         </label>
       )}
-      <button type="submit" className="btn btn-primary">
+      <button type="submit" className="w-full btn btn-primary">
         {invite ? "Join" : "Register"}
       </button>
+      <div className="divider"></div>
+      <span className="text-center">Already have an account?</span>
+      <Link to="/login" className="w-full btn btn-sm btn-ghost">
+        Login
+      </Link>
     </form>
   );
 }

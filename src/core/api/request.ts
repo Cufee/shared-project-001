@@ -1,15 +1,17 @@
 async function apiRequest<T>(
-  token: string,
   method: string,
   endpoint: string,
   body: unknown | null,
+  token: string | null = null,
 ): Promise<T> {
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
-  const url = `${backendUrl}/api/${endpoint}`;
-  const headers = {
+  const url = new URL(endpoint, backendUrl).href;
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
   };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
   const options = {
     method: method,
     headers,
@@ -23,3 +25,5 @@ async function apiRequest<T>(
   }
   return data;
 }
+
+export { apiRequest };

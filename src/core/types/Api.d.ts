@@ -1,3 +1,8 @@
+export interface ApiResponse<T> {
+  error: ApiError | null;
+  data: T | null;
+}
+
 export interface ApiError {
   statusCode: number;
   message: string | ApiErrorMessage | ApiErrorMessage[];

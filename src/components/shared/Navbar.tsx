@@ -28,7 +28,7 @@ function ActionMenu() {
       </div>
     );
   }
-  if (user !== null) {
+  if (user) {
     return (
       <>
         <div className="menu menu-horizontal">
