@@ -3,12 +3,12 @@ import useUserInfo from "../core/hooks/useUserInfo";
 import { UpdateUsername } from "../core/api/user";
 
 function Profile() {
-  const { loading, user, save } = useUserInfo();
+  const { loading, user, refetch } = useUserInfo();
   if (loading) return null;
   if (!user) return null;
 
   const updateUsername = (username: string) => {
-    UpdateUsername(username).then((res) => save(res.data || undefined));
+    UpdateUsername(username).then((res) => res.data && refetch());
   };
 
   return (

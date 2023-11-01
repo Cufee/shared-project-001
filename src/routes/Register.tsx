@@ -9,7 +9,7 @@ function Register() {
   const query = useQuery();
   const invite = query.get("invite");
 
-  const { save, user } = useUserInfo();
+  const { saveToken, user } = useUserInfo();
   const navigate = useNavigate();
   if (user) navigate("/upload");
 
@@ -17,8 +17,8 @@ function Register() {
   const onSubmit = async (data: unknown) => {
     const payload = data as RegisterPayload | RegisterFromInvitePayload;
     const res = await registerUser(payload);
-    if (res.data && res.data.token && res.data.user) {
-      save(res.data.user, res.data.token);
+    if (res.data && res.data.token) {
+      saveToken(res.data.token);
       navigate("/upload");
     } else {
       console.error(res.error);
@@ -30,7 +30,7 @@ function Register() {
       className="flex flex-col w-full max-w-sm gap-2 m-auto"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <label htmlFor="email">
+      <label htmlFor="username">
         <input
           type="text"
           placeholder="Username"

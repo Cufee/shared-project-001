@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { login } from "../core/api/auth";
 
 function Login() {
-  const { loading, token, save } = useUserInfo();
+  const { loading, token, saveToken } = useUserInfo();
   if (loading) return null;
 
   const navigate = useNavigate();
@@ -14,8 +14,8 @@ function Login() {
   const onSubmit = async (data: unknown) => {
     const payload = data as { username: string; password: string };
     const res = await login(payload.username, payload.password);
-    if (res.data && res.data.token && res.data.user) {
-      save(res.data.user, res.data.token);
+    if (res.data && res.data.token) {
+      saveToken(res.data.token);
       navigate("/upload");
     } else {
       console.error(res.error);
@@ -28,7 +28,7 @@ function Login() {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-full gap-2"
       >
-        <label htmlFor="email">
+        <label htmlFor="username">
           <input
             type="text"
             placeholder="Username"
@@ -36,7 +36,7 @@ function Login() {
             {...register("username", { required: true })}
           />
         </label>
-        <label htmlFor="email">
+        <label htmlFor="password">
           <input
             type="password"
             placeholder="Password"

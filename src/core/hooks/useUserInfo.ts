@@ -1,44 +1,32 @@
 import { User } from "../types/User";
 import { useEffect, useState } from "react";
 import { getStorageItem, setStorageItem } from "../storage/secure";
+import { CurrentUser } from "../api/user";
 
 const useUserInfo = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(
+    getStorageItem("token") as string | null,
+  );
   const [userLoading, setUserLoading] = useState(true);
 
-  const loadUser = () => {
-    const user = getStorageItem("user") as User | null;
-    if (user) {
-      setUser(user);
+  const loadUser = async (token: string) => {
+    const res = await CurrentUser(token);
+    if (res.data) {
+      setUser(res.data);
     }
   };
 
-  const loadToken = () => {
-    const token = getStorageItem("token") as string | null;
-    if (token) {
-      setToken(token);
-    }
+  const saveToken = (token: string) => {
+    setToken(token);
+    setStorageItem("token", token);
+    refetch();
   };
 
   const refetch = () => {
     setUserLoading(true);
-    loadUser();
-    loadToken();
-    setUserLoading(false);
-  };
-
-  const save = (user?: User, token?: string) => {
-    setUserLoading(true);
-    if (user) {
-      setUser(user);
-      setStorageItem("user", user);
-    }
-    if (token) {
-      setToken(token);
-      setStorageItem("token", token);
-    }
-    setUserLoading(false);
+    if (token) loadUser(token).then(() => setUserLoading(false));
+    else setUserLoading(false);
   };
 
   useEffect(() => {
@@ -46,10 +34,10 @@ const useUserInfo = () => {
   }, []);
 
   return {
-    save,
     user,
     token,
     refetch,
+    saveToken,
     loading: userLoading,
   };
 };
