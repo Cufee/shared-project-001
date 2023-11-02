@@ -1,6 +1,5 @@
-import useUserInfo from "../../core/hooks/useUserInfo";
 import { Link } from "react-router-dom";
-import { User } from "../../core/types/User";
+import { useUserContext } from "../../core/contexts/UserProvider";
 
 function Navbar() {
   return (
@@ -18,7 +17,7 @@ function Navbar() {
 }
 
 function ActionMenu() {
-  const { user, loading } = useUserInfo();
+  const { user, loading } = useUserContext();
   if (loading) {
     return (
       <div className="menu menu-horizontal">
@@ -36,7 +35,7 @@ function ActionMenu() {
             <Link to="/upload">Upload</Link>
           </li>
         </div>
-        <UserProfile user={user} />
+        <UserProfile />
       </>
     );
   }
@@ -55,7 +54,7 @@ function LoginButton() {
   );
 }
 
-function UserProfile({ user }: { user: User }) {
+function UserProfile() {
   return (
     <div className="dropdown dropdown-end">
       <label tabIndex={0} className="btn btn-ghost btn-circle avatar">

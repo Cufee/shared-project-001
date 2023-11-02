@@ -1,12 +1,12 @@
 import { getStorageItem } from "../storage/secure";
-import { ApiError } from "../types/Api";
+import { ApiResponse } from "../types/Api";
 import { User } from "../types/User";
 import { apiRequest } from "./request";
 
-async function CurrentUser(token: string) {
-  const res = await apiRequest<User | ApiError>("GET", "/user/me", null, token);
+async function CurrentUser(token: string): Promise<ApiResponse<User>> {
+  const res = await apiRequest<User>("GET", "/user/me", null, token);
   if ("error" in res) {
-    return { data: null, error: res.error };
+    return { data: null, error: res };
   }
   return { data: res, error: null };
 }
@@ -14,7 +14,7 @@ async function CurrentUser(token: string) {
 async function UpdatePassword(currentPassword: string, newPassword: string) {
   const token = getStorageItem("token") as string;
 
-  const res = await apiRequest<User | ApiError>(
+  const res = await apiRequest<User>(
     "GET",
     "/user/change-password",
     { password: currentPassword, newPassword },
@@ -29,7 +29,7 @@ async function UpdatePassword(currentPassword: string, newPassword: string) {
 async function UpdateUsername(username: string) {
   const token = getStorageItem("token") as string;
 
-  const res = await apiRequest<User | ApiError>(
+  const res = await apiRequest<User>(
     "PATCH",
     "/user/change-username",
     { username },

@@ -1,10 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
-import useUserInfo from "../core/hooks/useUserInfo";
+import { useEffect } from "react";
+import { useUserContext } from "../core/contexts/UserProvider";
 
 function GetStarted() {
-  const { token } = useUserInfo();
+  const { user } = useUserContext();
   const navigate = useNavigate();
-  if (token) navigate("/upload");
+
+  useEffect(() => {
+    if (user) navigate("/upload");
+  }, [user]);
 
   return (
     <div className="flex flex-col gap-8 m-auto">

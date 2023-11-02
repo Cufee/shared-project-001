@@ -1,9 +1,9 @@
 import { PropsWithChildren, useState } from "react";
-import useUserInfo from "../core/hooks/useUserInfo";
 import { UpdateUsername } from "../core/api/user";
+import { useUserContext } from "../core/contexts/UserProvider";
 
 function Profile() {
-  const { loading, user, refetch } = useUserInfo();
+  const { loading, user, refetch } = useUserContext();
   if (loading) return null;
   if (!user) return null;
 

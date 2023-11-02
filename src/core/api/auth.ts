@@ -1,5 +1,4 @@
 import {
-  ApiError,
   ApiResponse,
   RegisterFromInvitePayload,
   RegisterPayload,
@@ -19,7 +18,7 @@ async function register(
     ? "/auth/invitation-registration"
     : "/auth/register";
 
-  const data = await apiRequest<RegisterResponse | ApiError>(
+  const data = await apiRequest<RegisterResponse>(
     "POST",
     endpoint,
     payload,
@@ -31,7 +30,7 @@ async function register(
 }
 
 async function login(username: string, password: string) {
-  const data = await apiRequest<RegisterResponse | ApiError>(
+  const data = await apiRequest<RegisterResponse>(
     "POST",
     "/auth/login",
     { username, password },

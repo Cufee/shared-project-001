@@ -1,14 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
-import useUserInfo from "../core/hooks/useUserInfo";
 import { useForm } from "react-hook-form";
 import { login } from "../core/api/auth";
+import { useEffect } from "react";
+import { useUserContext } from "../core/contexts/UserProvider";
+import { useNotificationContext } from "../core/contexts/NotificationProvider";
 
 function Login() {
-  const { loading, token, saveToken } = useUserInfo();
+  const { error } = useNotificationContext();
+  const { loading, user, saveToken } = useUserContext();
   if (loading) return null;
 
   const navigate = useNavigate();
-  if (token) navigate("/upload");
+  useEffect(() => {
+    if (user) navigate("/upload");
+  }, [user]);
 
   const { register, handleSubmit } = useForm();
   const onSubmit = async (data: unknown) => {
@@ -18,7 +23,7 @@ function Login() {
       saveToken(res.data.token);
       navigate("/upload");
     } else {
-      console.error(res.error);
+      error("Invalid username or password");
     }
   };
 

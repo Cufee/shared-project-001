@@ -9,58 +9,66 @@ import Register from "./routes/Register";
 import GetStarted from "./routes/GetStarted";
 import Error from "./routes/Error";
 
-import useUserInfo from "./core/hooks/useUserInfo";
 import Login from "./routes/Login";
+import NotificationProvider, {
+  NotificationContainer,
+} from "./core/contexts/NotificationProvider";
+import UserProvider, { useUserContext } from "./core/contexts/UserProvider";
 
 function Layout() {
   return (
-    <>
-      <div className="flex flex-col items-center justify-start h-full min-h-screen">
-        <Navbar />
-        <div className="flex w-full h-full">
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route
-              path="/upload"
-              element={
-                <ProtectedRoute>
-                  <Upload />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/manage"
-              element={
-                <ProtectedRoute>
-                  <Manage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/join" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/get-started" element={<GetStarted />} />
-            <Route
-              path="*"
-              element={<Error code={404} message="This page does not exist" />}
-            />
-          </Routes>
+    <NotificationProvider>
+      <UserProvider>
+        <div className="flex flex-col items-center justify-start h-full min-h-screen">
+          <NotificationContainer />
+          <Navbar />
+          <div className="flex flex-col items-center justify-start flex-grow w-full h-full">
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route
+                path="/upload"
+                element={
+                  <ProtectedRoute>
+                    <Upload />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage"
+                element={
+                  <ProtectedRoute>
+                    <Manage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/join" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/get-started" element={<GetStarted />} />
+              <Route
+                path="*"
+                element={
+                  <Error code={404} message="This page does not exist" />
+                }
+              />
+            </Routes>
+          </div>
         </div>
-      </div>
-      <Footer />
-    </>
+        <Footer />
+      </UserProvider>
+    </NotificationProvider>
   );
 }
 
 function ProtectedRoute({ children }: { children: any }) {
-  const { user, loading } = useUserInfo();
+  const { user, loading } = useUserContext();
   if (loading) {
     return <span className="m-auto loading loading-lg"></span>;
   }

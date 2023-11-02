@@ -3,15 +3,21 @@ import useQuery from "../core/hooks/useQuery";
 import { Link, useNavigate } from "react-router-dom";
 import { RegisterFromInvitePayload, RegisterPayload } from "../core/types/Api";
 import { register as registerUser } from "../core/api/auth";
-import useUserInfo from "../core/hooks/useUserInfo";
+import { useEffect } from "react";
+import { useUserContext } from "../core/contexts/UserProvider";
+import { parseApiErrorMessage } from "../core/api/errors";
+import { useNotificationContext } from "../core/contexts/NotificationProvider";
 
 function Register() {
   const query = useQuery();
   const invite = query.get("invite");
 
-  const { saveToken, user } = useUserInfo();
+  const { error } = useNotificationContext();
+  const { saveToken, user } = useUserContext();
   const navigate = useNavigate();
-  if (user) navigate("/upload");
+  useEffect(() => {
+    if (user) navigate("/upload");
+  }, [user]);
 
   const { register, handleSubmit } = useForm();
   const onSubmit = async (data: unknown) => {
@@ -21,7 +27,8 @@ function Register() {
       saveToken(res.data.token);
       navigate("/upload");
     } else {
-      console.error(res.error);
+      const { message, context } = parseApiErrorMessage(res.error);
+      error(message, context);
     }
   };
 
