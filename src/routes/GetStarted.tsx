@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import { useUserContext } from "../core/contexts/UserProvider";
 
 function GetStarted() {
-  const { user } = useUserContext();
+  const { user, loading } = useUserContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) navigate("/upload");
-  }, [user]);
+  }, [loading]);
 
   return (
     <div className="flex flex-col gap-8 m-auto">

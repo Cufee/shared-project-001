@@ -1,7 +1,12 @@
-export interface ApiResponse<T> {
-  error: ApiError | null;
-  data: T | null;
-}
+export type ApiResponse<T> =
+  | {
+      error: null;
+      data: T;
+    }
+  | {
+      error: ParsedApiError;
+      data: null;
+    };
 
 export interface ApiError {
   statusCode: number;
@@ -9,9 +14,14 @@ export interface ApiError {
   error: string;
 }
 
+export interface ParsedApiError {
+  message: string;
+  context?: string;
+}
+
 interface ApiErrorMessage {
-  "property": string;
-  "message": string;
+  property: string;
+  message: string;
 }
 
 export interface LoginPayload {

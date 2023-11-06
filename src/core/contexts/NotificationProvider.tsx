@@ -84,7 +84,10 @@ function NotificationContainer() {
   const { queue, dismiss, clear } = useContext(NotificationContext);
   if (!queue || queue.length == 0) return null;
   return (
-    <div className="fixed top-0 right-0 z-50 flex flex-col items-end w-full max-w-md gap-2 p-4">
+    <div
+      className="fixed top-0 right-0 flex flex-col items-end w-full max-w-md gap-2 p-4"
+      style={{ zIndex: 9999 }}
+    >
       {queue.map((notification) => (
         <button
           onClick={() => dismiss(notification.id)}

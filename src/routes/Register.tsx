@@ -2,34 +2,24 @@ import { useForm } from "react-hook-form";
 import useQuery from "../core/hooks/useQuery";
 import { Link, useNavigate } from "react-router-dom";
 import { RegisterFromInvitePayload, RegisterPayload } from "../core/types/Api";
-import { register as registerUser } from "../core/api/auth";
 import { useEffect } from "react";
 import { useUserContext } from "../core/contexts/UserProvider";
-import { parseApiErrorMessage } from "../core/api/errors";
-import { useNotificationContext } from "../core/contexts/NotificationProvider";
 
 function Register() {
   const query = useQuery();
   const invite = query.get("invite");
 
-  const { error } = useNotificationContext();
-  const { saveToken, user } = useUserContext();
+  const user = useUserContext();
+
   const navigate = useNavigate();
   useEffect(() => {
-    if (user) navigate("/upload");
-  }, [user]);
+    if (user.user) navigate("/upload");
+  }, [user.loading]);
 
   const { register, handleSubmit } = useForm();
   const onSubmit = async (data: unknown) => {
     const payload = data as RegisterPayload | RegisterFromInvitePayload;
-    const res = await registerUser(payload);
-    if (res.data && res.data.token) {
-      saveToken(res.data.token);
-      navigate("/upload");
-    } else {
-      const { message, context } = parseApiErrorMessage(res.error);
-      error(message, context);
-    }
+    user.register(payload);
   };
 
   return (

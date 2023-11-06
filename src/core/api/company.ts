@@ -1,11 +1,21 @@
+import { getStorageItem } from "../storage/secure";
 import { apiRequest } from "./request";
 
-async function getCompanyDetails(token: string, id: string) {
-  const res = await apiRequest<{}>("GET", `/company/${id}`, null, token);
-  if ("error" in res) {
-    return { data: null, error: res.error };
-  }
-  return { data: res, error: null };
+function getCompanyDetails(id: string) {
+  const token = getStorageItem("token") as string;
+
+  return apiRequest<{ name: string }>("GET", `/company/${id}`, null, token);
 }
 
-export { getCompanyDetails };
+function createCompanyInvitation() {
+  const token = getStorageItem("token") as string;
+
+  return apiRequest<{ invitationToken: string }>(
+    "POST",
+    `/invitation`,
+    null,
+    token
+  );
+}
+
+export { getCompanyDetails, createCompanyInvitation };

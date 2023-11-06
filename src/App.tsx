@@ -23,42 +23,44 @@ function Layout() {
           <NotificationContainer />
           <Navbar />
           <div className="flex flex-col items-center justify-start flex-grow w-full h-full">
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route
-                path="/upload"
-                element={
-                  <ProtectedRoute>
-                    <Upload />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/manage"
-                element={
-                  <ProtectedRoute>
-                    <Manage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/join" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/get-started" element={<GetStarted />} />
-              <Route
-                path="*"
-                element={
-                  <Error code={404} message="This page does not exist" />
-                }
-              />
-            </Routes>
+            <WaitForUser>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route
+                  path="/upload"
+                  element={
+                    <ProtectedRoute>
+                      <Upload />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/manage"
+                  element={
+                    <ProtectedRoute>
+                      <Manage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/join" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/get-started" element={<GetStarted />} />
+                <Route
+                  path="*"
+                  element={
+                    <Error code={404} message="This page does not exist" />
+                  }
+                />
+              </Routes>
+            </WaitForUser>
           </div>
         </div>
         <Footer />
@@ -73,7 +75,16 @@ function ProtectedRoute({ children }: { children: any }) {
     return <span className="m-auto loading loading-lg"></span>;
   }
   if (!user) {
+    console.log("Redirecting to / from protected route");
     return <Navigate to="/" replace />;
+  }
+  return children;
+}
+
+function WaitForUser({ children }: { children: any }) {
+  const { loading } = useUserContext();
+  if (loading) {
+    return <span className="m-auto loading loading-lg"></span>;
   }
   return children;
 }

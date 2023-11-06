@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useUserContext } from "../../core/contexts/UserProvider";
 
 function Navbar() {
@@ -18,6 +18,7 @@ function Navbar() {
 
 function ActionMenu() {
   const { user, loading } = useUserContext();
+  const location = useLocation();
   if (loading) {
     return (
       <div className="menu menu-horizontal">
@@ -30,11 +31,13 @@ function ActionMenu() {
   if (user) {
     return (
       <>
-        <div className="menu menu-horizontal">
-          <li>
-            <Link to="/upload">Upload</Link>
-          </li>
-        </div>
+        {location.pathname !== "/upload" && (
+          <div className="menu menu-horizontal">
+            <li>
+              <Link to="/upload">Upload</Link>
+            </li>
+          </div>
+        )}
         <UserProfile />
       </>
     );
@@ -43,6 +46,8 @@ function ActionMenu() {
 }
 
 function LoginButton() {
+  const location = useLocation();
+  if (location.pathname === "/login") return null;
   return (
     <div className="menu menu-horizontal">
       <li>
@@ -55,6 +60,8 @@ function LoginButton() {
 }
 
 function UserProfile() {
+  const { logout } = useUserContext();
+
   return (
     <div className="dropdown dropdown-end">
       <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -73,7 +80,7 @@ function UserProfile() {
           <Link to="/profile">Profile</Link>
         </li>
         <li>
-          <Link to="/logout">Logout</Link>
+          <button onClick={logout}>Logout</button>
         </li>
       </ul>
     </div>

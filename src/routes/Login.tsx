@@ -1,32 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { login } from "../core/api/auth";
 import { useEffect } from "react";
 import { useUserContext } from "../core/contexts/UserProvider";
-import { useNotificationContext } from "../core/contexts/NotificationProvider";
 
 function Login() {
-  const { error } = useNotificationContext();
-  const { loading, user, saveToken } = useUserContext();
-  if (loading) return null;
+  const { loading, user, login } = useUserContext();
 
   const navigate = useNavigate();
   useEffect(() => {
     if (user) navigate("/upload");
-  }, [user]);
+  }, [loading]);
 
   const { register, handleSubmit } = useForm();
-  const onSubmit = async (data: unknown) => {
+  const onSubmit = (data: unknown) => {
     const payload = data as { username: string; password: string };
-    const res = await login(payload.username, payload.password);
-    if (res.data && res.data.token) {
-      saveToken(res.data.token);
-      navigate("/upload");
-    } else {
-      error("Invalid username or password");
-    }
+    login(payload.username, payload.password);
   };
 
+  if (loading) return null;
   return (
     <div className="flex flex-col w-full max-w-sm gap-2 m-auto">
       <form

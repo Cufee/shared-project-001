@@ -1,11 +1,12 @@
-import { ApiError } from "../types/Api";
+import { ApiResponse } from "../types/Api";
+import { parseApiErrorMessage } from "./errors";
 
 async function apiRequest<T>(
   method: string,
   endpoint: string,
   body: unknown | null,
-  token: string | null = null,
-): Promise<T | ApiError> {
+  token: string | null = null
+): Promise<ApiResponse<T>> {
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
   const url = new URL(endpoint, backendUrl).href;
   const headers: Record<string, string> = {
@@ -23,16 +24,18 @@ async function apiRequest<T>(
   try {
     const res = await fetch(url, options);
     const data = await res.json();
-    if (!res.ok) {
-      throw new Error("Something went wrong");
+    if (data.error || data.message) {
+      return { data: null, error: parseApiErrorMessage(data) };
     }
-    return data;
+    return { data: data as T, error: null };
   } catch (err) {
+    console.error(err);
     return {
-      message: "Something went wrong while making a request to the server",
-      error: "",
-      statusCode: 500,
-    } as ApiError;
+      data: null,
+      error: {
+        message: "Something went wrong while making a request to the server",
+      },
+    };
   }
 }
 
