@@ -93,7 +93,7 @@ function ChangeUsernameModal({
             </button>
           </form>
         </div>
-        <form method="dialog" className="modal-backdrop">
+        <form method="dialog" className="bg-black modal-backdrop bg-opacity-80">
           <button onClick={() => setOpen(false)}>close</button>
         </form>
       </dialog>
@@ -153,7 +153,7 @@ function ChangePasswordModal({
             </button>
           </form>
         </div>
-        <form method="dialog" className="bg-black modal-backdrop bg-opacity-40">
+        <form method="dialog" className="bg-black modal-backdrop bg-opacity-80">
           <button onClick={() => setOpen(false)}>close</button>
         </form>
       </dialog>
