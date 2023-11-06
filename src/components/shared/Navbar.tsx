@@ -61,6 +61,7 @@ function LoginButton() {
 
 function UserProfile() {
   const { logout } = useUserContext();
+  const location = useLocation();
 
   return (
     <div className="dropdown dropdown-end">
@@ -73,12 +74,16 @@ function UserProfile() {
         tabIndex={0}
         className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
       >
-        <li>
-          <Link to="/manage">Team</Link>
-        </li>
-        <li>
-          <Link to="/profile">Profile</Link>
-        </li>
+        {location.pathname !== "/manage" && (
+          <li>
+            <Link to="/manage">Team</Link>
+          </li>
+        )}
+        {location.pathname !== "/profile" && (
+          <li>
+            <Link to="/profile">Profile</Link>
+          </li>
+        )}
         <li>
           <button onClick={logout}>Logout</button>
         </li>
