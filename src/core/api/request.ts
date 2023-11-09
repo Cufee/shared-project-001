@@ -3,6 +3,7 @@ import { parseApiErrorMessage } from "./errors";
 
 interface RequestOptions {
   contentType?: string;
+  stringify?: boolean;
 }
 
 async function apiRequest<T>(
@@ -10,20 +11,25 @@ async function apiRequest<T>(
   endpoint: string,
   body: unknown | null,
   token: string | null = null,
-  opts: RequestOptions = {}
+  opts: RequestOptions = { stringify: true }
 ): Promise<ApiResponse<T>> {
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
   const url = new URL(endpoint, backendUrl).href;
-  const headers: Record<string, string> = {
-    "Content-Type": opts.contentType || "application/json",
-  };
+  const headers: Record<string, string> = {};
+  if (opts.contentType) {
+    headers["Content-Type"] = opts.contentType;
+  }
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
   const options = {
     method: method,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: body
+      ? opts.stringify
+        ? JSON.stringify(body)
+        : (body as any)
+      : undefined,
   };
 
   try {

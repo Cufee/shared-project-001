@@ -50,7 +50,7 @@ function Manage() {
   if (!company) return <div>You are not part of a company</div>;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col items-center w-full gap-4 max-w-7xl">
       <div className="flex flex-row w-full max-w-2xl join">
         <span className="flex items-center w-48 p-4 bg-gray-200">
           Company Name
@@ -84,7 +84,12 @@ function Manage() {
 
 function ManageUsers({ companyId: string }: { companyId: string }) {
   // my/workers
-  return <div>ManageUsers</div>;
+  return (
+    <div className="flex flex-col items-center w-full">
+      <div className="w-full divider"></div>
+      Manage Company Interface
+    </div>
+  );
 }
 
 export default Manage;

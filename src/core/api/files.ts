@@ -13,9 +13,40 @@ async function UploadFile(file: File) {
     formData,
     token,
     {
-      contentType: "multipart/form-data",
+      stringify: false,
     }
   );
 }
 
-export { UploadFile };
+async function DeleteFile(id: string) {
+  const token = getStorageItem("token") as string;
+
+  return apiRequest<UploadedFile>(
+    "DELETE",
+    `/file-management/delete/${id}`,
+    null,
+    token
+  );
+}
+
+async function UserFiles() {
+  const token = getStorageItem("token") as string;
+  return apiRequest<UploadedFile[]>(
+    "GET",
+    `/file-management/my-files`,
+    null,
+    token
+  );
+}
+
+async function CompanyFiles() {
+  const token = getStorageItem("token") as string;
+  return apiRequest<UploadedFile[]>(
+    "GET",
+    `/file-management/my-company-files`,
+    null,
+    token
+  );
+}
+
+export { UploadFile, UserFiles, CompanyFiles, DeleteFile };

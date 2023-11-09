@@ -1,7 +1,7 @@
 export interface File {
-  expirationDate?: Date;
-  name: string;
-  size: number;
-  type: string;
-  url: string;
+  id: string;
+  uploadDate: string;
+  expirationDate: string;
+  originalFileName: string;
+  generatedLink: string;
 }

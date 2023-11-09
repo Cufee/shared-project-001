@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { UploadFile } from "../../core/api/files";
 import { useNotificationContext } from "../../core/contexts/NotificationProvider";
 
-function UploadBox() {
+function UploadBox({ onUpload }: { onUpload: () => void }) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { error } = useNotificationContext();
@@ -12,13 +12,16 @@ function UploadBox() {
     setSelectedFiles(acceptedFiles);
   }, []);
 
-  const onUpload = () => {
+  const uploadHandler = () => {
     setIsLoading(true);
 
     UploadFile(selectedFiles[0]).then((res) => {
       if (res.error) {
         error(res.error.message, res.error.context);
         setSelectedFiles([]);
+      }
+      if (res.data) {
+        onUpload();
       }
       setIsLoading(false);
     });
@@ -83,7 +86,7 @@ function UploadBox() {
           {selectedFiles.map((file) => (
             <SelectedFile file={file} />
           ))}
-          <button className="btn btn-primary" onClick={onUpload}>
+          <button className="btn btn-primary" onClick={uploadHandler}>
             Upload
           </button>
         </div>
