@@ -18,8 +18,13 @@ function Register() {
 
   const { register, handleSubmit } = useForm();
   const onSubmit = async (data: unknown) => {
-    const payload = data as RegisterPayload | RegisterFromInvitePayload;
-    user.register(payload);
+    if (invite) {
+      const payload = data as RegisterFromInvitePayload;
+      payload.invitationToken = invite;
+      user.register(payload);
+    } else {
+      user.register(data as RegisterPayload);
+    }
   };
 
   return (
@@ -67,17 +72,16 @@ function Register() {
           {...register("surname", { required: true })}
         />
       </label>
-      {(invite && (
+      {invite ? (
         <label htmlFor="inviteToken">
           <input
             disabled
             type="hidden"
             value={invite}
             className="w-full input input-bordered"
-            {...register("inviteToken", { required: true })}
           />
         </label>
-      )) || (
+      ) : (
         <label htmlFor="companyName">
           <input
             type="text"

@@ -13,8 +13,9 @@ function UpdatePassword(currentPassword: string, newPassword: string) {
   return apiRequest<User>(
     "PATCH",
     "/user/change-password",
-    { password: currentPassword, newPassword },
-    token
+    JSON.stringify({ password: currentPassword, newPassword }),
+    token,
+    { contentType: "application/json" }
   );
 }
 
@@ -24,8 +25,9 @@ function UpdateUsername(username: string) {
   return apiRequest<User>(
     "PATCH",
     "/user/change-username",
-    { username },
-    token
+    JSON.stringify({ username }),
+    token,
+    { contentType: "application/json" }
   );
 }
 

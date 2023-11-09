@@ -15,16 +15,20 @@ function UploadBox({ onUpload }: { onUpload: () => void }) {
   const uploadHandler = () => {
     setIsLoading(true);
 
-    UploadFile(selectedFiles[0]).then((res) => {
-      if (res.error) {
-        error(res.error.message, res.error.context);
+    UploadFile(selectedFiles[0])
+      .then((res) => {
+        if (res.error) {
+          error(res.error.message, res.error.context);
+          setSelectedFiles([]);
+        }
+        if (res.data) {
+          onUpload();
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
         setSelectedFiles([]);
-      }
-      if (res.data) {
-        onUpload();
-      }
-      setIsLoading(false);
-    });
+      });
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

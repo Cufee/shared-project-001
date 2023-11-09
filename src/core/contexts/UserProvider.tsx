@@ -98,6 +98,7 @@ function UserProvider({ children }: PropsWithChildren<{}>) {
     setUserLoading(true);
     const res = await registerUser(data);
     if (res.data) {
+      setStorageItem("token", res.data.token);
       setToken(res.data.token);
       await loadUser(res.data.token);
       navigate("/upload", { replace: true });

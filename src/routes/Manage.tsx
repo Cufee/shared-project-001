@@ -87,25 +87,25 @@ function ManageUsers() {
         error(res.error.message, res.error.context);
       }
     });
-  });
+  }, []);
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full max-w-2xl gap-2">
       <div className="w-full divider">Manage Users</div>
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-2">
         <button className="btn btn-primary" onClick={onInviteCreate}>
           Create New Invite Code
         </button>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col w-full gap-2">
         {workers.map((user) => (
-          <div className="flex flex-row items-center justify-between gap-2 p-2 hover:bg-gray-300">
-            <span className="flex-grow">
+          <div className="flex flex-row items-center justify-between w-full">
+            <span className="flex items-center h-full p-2 bg-gray-200">
               {user.name} {user.surname}
             </span>
-            <div className="flex items-center gap-2">
-              <span>{user.username}</span>
+            <div className="flex items-center justify-end flex-grow h-full gap-2 p-2 border border-gray-200">
+              <span>@{user.username}</span>
               <button
                 className="btn btn-primary btn-sm"
                 onClick={() => removeUserHandler(user.id)}

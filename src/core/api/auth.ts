@@ -12,16 +12,21 @@ interface RegisterResponse {
 }
 
 function register(
-  payload: RegisterPayload | RegisterFromInvitePayload,
+  payload: RegisterPayload | RegisterFromInvitePayload
 ): Promise<ApiResponse<RegisterResponse>> {
-  const endpoint = "invitationToken" in payload
-    ? "/auth/invitation-registration"
-    : "/auth/register";
+  const endpoint =
+    "invitationToken" in payload
+      ? "/auth/invitation-registration"
+      : "/auth/register";
 
   return apiRequest<RegisterResponse>(
     "POST",
     endpoint,
-    payload,
+    JSON.stringify(payload),
+    null,
+    {
+      contentType: "application/json",
+    }
   );
 }
 
@@ -29,7 +34,9 @@ function login(username: string, password: string) {
   return apiRequest<RegisterResponse>(
     "POST",
     "/auth/login",
-    { username, password },
+    JSON.stringify({ username, password }),
+    null,
+    { contentType: "application/json" }
   );
 }
 

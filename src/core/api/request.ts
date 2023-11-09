@@ -3,7 +3,6 @@ import { parseApiErrorMessage } from "./errors";
 
 interface RequestOptions {
   contentType?: string;
-  stringify?: boolean;
 }
 
 async function apiRequest<T>(
@@ -11,7 +10,7 @@ async function apiRequest<T>(
   endpoint: string,
   body: unknown | null,
   token: string | null = null,
-  opts: RequestOptions = { stringify: true }
+  opts: RequestOptions = {}
 ): Promise<ApiResponse<T>> {
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
   const url = new URL(endpoint, backendUrl).href;
@@ -25,11 +24,7 @@ async function apiRequest<T>(
   const options = {
     method: method,
     headers,
-    body: body
-      ? opts.stringify
-        ? JSON.stringify(body)
-        : (body as any)
-      : undefined,
+    body: body as any,
   };
 
   try {
