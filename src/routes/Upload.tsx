@@ -51,7 +51,7 @@ function Upload() {
       <div className="flex items-center justify-center w-full h-1/4">
         <UploadBox onUpload={refreshFiles} />
       </div>
-      <div className="divider"></div>
+      <div className="divider">Your Files</div>
       {loadingFiles ? (
         <span>Loading...</span>
       ) : (
@@ -63,9 +63,8 @@ function Upload() {
           </div>
           {user?.role === "moderator" && (
             <>
-              <div className="divider"></div>
+              <div className="divider">All Company Files</div>
               <div className="flex flex-col items-center gap-1">
-                <span className="text-xl">All Company Files</span>
                 <div className="w-full">
                   <FilesList refresh={refreshFiles} files={companyFiles} />
                 </div>
