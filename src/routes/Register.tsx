@@ -72,16 +72,7 @@ function Register() {
           {...register("surname", { required: true })}
         />
       </label>
-      {invite ? (
-        <label htmlFor="inviteToken">
-          <input
-            disabled
-            type="hidden"
-            value={invite}
-            className="w-full input input-bordered"
-          />
-        </label>
-      ) : (
+      {!invite && (
         <label htmlFor="companyName">
           <input
             type="text"
