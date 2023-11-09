@@ -10,7 +10,7 @@ async function UploadFile(file: File) {
   return apiRequest<UploadedFile>(
     "POST",
     `/file-management/upload`,
-    file,
+    formData,
     token,
     {
       contentType: "multipart/form-data",
