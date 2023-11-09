@@ -1,9 +1,12 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { UploadFile } from "../../core/api/files";
+import { useNotificationContext } from "../../core/contexts/NotificationProvider";
 
 function UploadBox() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { error } = useNotificationContext();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setSelectedFiles(acceptedFiles);
@@ -11,10 +14,14 @@ function UploadBox() {
 
   const onUpload = () => {
     setIsLoading(true);
-    setTimeout(() => {
+
+    UploadFile(selectedFiles[0]).then((res) => {
+      if (res.error) {
+        error(res.error.message, res.error.context);
+        setSelectedFiles([]);
+      }
       setIsLoading(false);
-      setSelectedFiles([]);
-    }, 2000);
+    });
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

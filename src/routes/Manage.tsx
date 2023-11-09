@@ -5,12 +5,13 @@ import {
   createCompanyInvitation,
   getCompanyDetails,
 } from "../core/api/company";
+import { Company } from "../core/types/Company";
 
 function Manage() {
   const { error } = useNotificationContext();
   const { user } = useUserContext();
 
-  const [company, setCompany] = useState<{ name: string } | null>(null);
+  const [company, setCompany] = useState<Company | null>(null);
   const [loading, setLoading] = useState(true);
   const [inviteToken, setInviteToken] = useState("");
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
@@ -32,19 +33,22 @@ function Manage() {
   };
 
   useEffect(() => {
-    const companyId = user?.worksFor?.id || user?.ownedCompany?.id;
-    if (!companyId) error("You are not part of a company");
-    setLoading(false);
+    setLoading(true);
+    if (!user?.company) {
+      setLoading(false);
+      return;
+    }
 
-    getCompanyDetails(companyId!).then((company) => {
+    getCompanyDetails(user?.company!).then((company) => {
       setCompany(company.data);
       setLoading(false);
     });
   }, []);
 
+  if (loading) return <div>Loading...</div>;
   if (!user) return null; // ProtectedRoute should prevent this
-  if (loading) return null;
-  if (!company) return null;
+  if (!company) return <div>You are not part of a company</div>;
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-row w-full max-w-2xl join">
@@ -72,8 +76,15 @@ function Manage() {
           </form>
         </dialog>
       )}
+
+      {user.role === "moderator" && <ManageUsers companyId={user.company} />}
     </div>
   );
+}
+
+function ManageUsers({ companyId: string }: { companyId: string }) {
+  // my/workers
+  return <div>ManageUsers</div>;
 }
 
 export default Manage;

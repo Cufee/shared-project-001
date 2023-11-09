@@ -1,10 +1,11 @@
 import { getStorageItem } from "../storage/secure";
+import { Company } from "../types/Company";
 import { apiRequest } from "./request";
 
 function getCompanyDetails(id: string) {
   const token = getStorageItem("token") as string;
 
-  return apiRequest<{ name: string }>("GET", `/company/${id}`, null, token);
+  return apiRequest<Company>("GET", `/company/${id}`, null, token);
 }
 
 function createCompanyInvitation() {

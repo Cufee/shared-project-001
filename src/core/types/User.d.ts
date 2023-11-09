@@ -3,10 +3,8 @@ export interface User {
   name: string;
   surname: string;
   username: string;
+  company: string;
   role: UserRole;
-  passwordResetToken: string;
-  ownedCompany?: CompanyReference;
-  worksFor?: CompanyReference;
 }
 
 export interface CompanyReference {

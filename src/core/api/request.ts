@@ -1,16 +1,21 @@
 import { ApiResponse } from "../types/Api";
 import { parseApiErrorMessage } from "./errors";
 
+interface RequestOptions {
+  contentType?: string;
+}
+
 async function apiRequest<T>(
   method: string,
   endpoint: string,
   body: unknown | null,
-  token: string | null = null
+  token: string | null = null,
+  opts: RequestOptions = {}
 ): Promise<ApiResponse<T>> {
   const backendUrl = import.meta.env.VITE_BACKEND_API_URL;
   const url = new URL(endpoint, backendUrl).href;
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    "Content-Type": opts.contentType || "application/json",
   };
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
@@ -39,4 +44,4 @@ async function apiRequest<T>(
   }
 }
 
-export { apiRequest };
+export { apiRequest, type RequestOptions };
